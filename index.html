@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="theme-color" content="#080c10" />
+    <meta
+      name="description"
+      content="牡丹、玫瑰、莲花、向日葵、郁金香与百合。使用双手或鼠标，让粒子散开后聚合成六种不同的花。"
+    />
+    <title>浮光 · Particle Bloom</title>
+  </head>
+  <body>
+    <div id="app">
+      <video id="camera" playsinline muted aria-hidden="true"></video>
+      <div class="camera-shade"></div>
+      <canvas
+        id="scene"
+        tabindex="0"
+        aria-label="交互式三维粒子花，可拖动旋转和滚轮缩放"
+      ></canvas>
+      <div class="vignette"></div>
+      <header>
+        <a class="brand" href="./" aria-label="浮光首页"
+          ><span class="brand-mark">✳</span
+          ><span>浮光<span class="brand-en">PARTICLE BLOOM</span></span></a
+        >
+        <div class="top-right">
+          <span class="live-dot"></span><span id="mode-label">自由演示</span
+          ><button
+            class="icon-button"
+            id="settings-toggle"
+            aria-expanded="false"
+            aria-label="打开画质设置"
+            title="画质设置"
+          >
+            ◈</button
+          ><button
+            class="icon-button"
+            id="fullscreen"
+            aria-label="全屏"
+            title="全屏"
+          >
+            ⛶
+          </button>
+        </div>
+      </header>
+      <main>
+        <div class="intro">
+          <p class="eyebrow">AN EXPERIMENT IN LIGHT & GESTURE</p>
+          <h1>让光，<br />在掌心生长。</h1>
+          <p class="subtitle">
+            聚拢一场星尘，唤醒一朵花。<br />每一次挥手，都是独一无二的绽放。
+          </p>
+          <button id="camera-button" class="primary">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="5" width="13" height="14" rx="3" />
+              <path d="m16 9 5-3v12l-5-3" /></svg
+            ><span>开启手势交互</span><span class="button-arrow">↗</span>
+          </button>
+          <p class="privacy">摄像头仅在本机处理 · 不录制，不上传</p>
+        </div>
+        <section class="flower-picker" id="flower-picker" aria-label="选择粒子花型" aria-busy="false">
+          <label for="flower-type">花型</label>
+          <select id="flower-type" aria-describedby="flower-description"></select>
+          <p id="flower-description">粉白多层卷瓣</p>
+        </section>
+        <div class="art-label">
+          <span class="label-cross">＋</span
+          ><span
+            >BOTANICAL STUDY — <span id="study-number">001</span><br /><strong id="flower-title"
+              >光之牡丹</strong
+            ></span
+          >
+        </div>
+        <div class="status-card" role="status" aria-live="polite">
+          <span class="status-indicator"></span
+          ><span id="status">无需摄像头，也可以探索</span>
+        </div>
+        <section
+          class="settings"
+          id="settings"
+          hidden
+          aria-label="画质与显示设置"
+        >
+          <h2>光的细节</h2>
+          <label
+            >粒子质量<select id="quality">
+              <option value="auto">自动适配</option>
+              <option value="high">细腻 · 100,000</option>
+              <option value="medium">平衡 · 60,000</option>
+              <option value="low">轻盈 · 28,000</option>
+            </select></label
+          ><label>透明容器<input type="checkbox" id="cube" checked /></label
+          ><label
+            >镜头背景<input type="checkbox" id="camera-background" checked
+          /></label>
+          <p>手势模式需要 HTTPS 或 localhost，识别模型从当前本地服务加载。</p>
+        </section>
+      </main>
+      <aside class="gesture-guide">
+        <p class="eyebrow">用手，描绘光的形状</p>
+        <div>
+          <span class="gesture-icon">✋</span
+          ><span>张开右手<strong>聚合绽放</strong></span>
+        </div>
+        <div>
+          <span class="gesture-icon">↻</span
+          ><span>转动手腕<strong>旋转花朵</strong></span>
+        </div>
+        <div>
+          <span class="gesture-icon">↔</span
+          ><span>开合左手<strong>调整大小</strong></span>
+        </div>
+        <div>
+          <span class="gesture-icon">⌁</span
+          ><span>拇指食指靠拢<strong>光带扫描</strong></span>
+        </div>
+        <div>
+          <span class="gesture-icon">✊</span
+          ><span>握紧右拳<strong>散入星尘</strong></span>
+        </div>
+      </aside>
+      <footer>
+        <div class="specimen">
+          <span class="specimen-number" id="specimen-number">01</span
+          ><span
+            >数字植物标本<span id="particle-count"
+              >100,000 LIVING PARTICLES</span
+            ></span
+          >
+        </div>
+        <div class="controls" role="group" aria-label="粒子花操作">
+          <button id="bloom" class="selected" aria-pressed="true">绽放</button
+          ><button id="scatter" aria-pressed="false">星散</button
+          ><span class="divider"></span
+          ><button id="auto" aria-pressed="false">自动流转</button
+          ><button id="reset" aria-label="重置视角">↺</button>
+        </div>
+        <p class="mouse-hint">
+          拖动旋转 <span>·</span> 滚轮缩放 <span>·</span> 空格聚散
+        </p>
+      </footer>
+      <div id="error" hidden role="alert">
+        <h2>暂时无法开启光的世界</h2>
+        <p>请使用支持 WebGL 2 的现代浏览器，并开启硬件加速。</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
